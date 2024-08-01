@@ -35,9 +35,32 @@ async function writeProjects(projects) {
     }
 }
 
+function sortProjectsJson(projectsJson) {
+    // Sort the main project keys
+    const sortedProjects = Object.keys(projectsJson)
+        .sort()
+        .reduce((acc, key) => {
+            acc[key] = projectsJson[key];
+            return acc;
+        }, {});
+
+    // Sort subprojects within each project
+    for (const project in sortedProjects) {
+        sortedProjects[project] = Object.keys(sortedProjects[project])
+            .sort()
+            .reduce((acc, key) => {
+                acc[key] = sortedProjects[project][key];
+                return acc;
+            }, {});
+    }
+
+    return sortedProjects;
+}
+
 app.get('/api/projects', async (req, res) => {
     const projects = await readProjects();
-    res.json(projects);
+    const sortedProjects = sortProjectsJson(projects);
+    res.json(sortedProjects);
 });
 
 app.post('/api/projects', async (req, res) => {
