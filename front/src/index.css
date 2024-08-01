@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --solarized-base03: #002b36;
+    --solarized-base02: #073642;
+    --solarized-base01: #586e75;
+    --solarized-base00: #657b83;
+    --solarized-base0: #839496;
+    --solarized-base1: #93a1a1;
+    --solarized-yellow: #b58900;
+    --solarized-orange: #cb4b16;
+    --solarized-red: #dc322f;
+    --solarized-magenta: #d33682;
+    --solarized-violet: #6c71c4;
+    --solarized-blue: #268bd2;
+    --solarized-cyan: #2aa198;
+    --solarized-green: #859900;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  @apply bg-solarized-base03 text-solarized-base0 min-h-screen flex items-center justify-center p-4;
+}
+
+.bg-solarized-base03 { background-color: var(--solarized-base03); }
+.bg-solarized-base02 { background-color: var(--solarized-base02); }
+.bg-solarized-base01 { background-color: var(--solarized-base01); }
+.text-solarized-base0 { color: var(--solarized-base0); }
+.text-solarized-base1 { color: var(--solarized-base1); }
+.text-solarized-blue { color: var(--solarized-blue); }
+.text-solarized-yellow { color: var(--solarized-yellow); }
+.bg-solarized-green { background-color: var(--solarized-green); }
+.bg-solarized-blue { background-color: var(--solarized-blue); }
+.bg-solarized-violet { background-color: var(--solarized-violet); }
+.bg-solarized-orange { background-color: var(--solarized-orange); }
+.bg-solarized-red { background-color: var(--solarized-red); }

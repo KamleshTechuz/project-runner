@@ -1,0 +1,9 @@
+
+> front@0.0.0 dev
+> vite --port=7718
+
+
+  VITE v5.3.5  ready in 117 ms
+
+  ➜  Local:   http://localhost:7718/
+  ➜  Network: use --host to expose
