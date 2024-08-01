@@ -81,32 +81,54 @@ app.post('/api/run', async (req, res) => {
 
     const fullPath = path.join(BASE_PROJECT_PATH, projectInfo.path);
     
-    // Construct the command to run in the new terminal
-    const command = `
-        gnome-terminal -- bash -c "
-        source ~/.bashrc;
-        export NVM_DIR=\\"$HOME/.nvm\\";
-        [ -s \\"$NVM_DIR/nvm.sh\\" ] && \\. \\"$NVM_DIR/nvm.sh\\";
-        cd '${fullPath}';
-        echo 'Running command: ${projectInfo.runCommand}';
-        ${projectInfo.runCommand};
-        echo 'Command finished. Terminal will remain open.';
-        exec bash;
-        "
-        `
-    ;
-
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`exec error: ${error}`);
-            return res.status(500).json({ 
-                error: 'An error occurred while running the project',
-                details: error.message,
-                stdout: stdout,
-                stderr: stderr
-            });
+    // Check if a GNOME terminal is already open
+    const checkCommand = "pgrep -f gnome-terminal";
+    
+    exec(checkCommand, (error, stdout, stderr) => {
+        let command;
+        
+        if (stdout) {
+            // A terminal is already open, so open a new tab
+            command = `
+                gnome-terminal --tab -- bash -c "
+                source ~/.bashrc;
+                export NVM_DIR=\\"$HOME/.nvm\\";
+                [ -s \\"$NVM_DIR/nvm.sh\\" ] && \\. \\"$NVM_DIR/nvm.sh\\";
+                cd '${fullPath}';
+                echo 'Running command: ${projectInfo.runCommand}';
+                ${projectInfo.runCommand};
+                echo 'Command finished. Tab will remain open.';
+                exec bash;
+                "
+            `;
+        } else {
+            // No terminal is open, so open a new terminal window
+            command = `
+                gnome-terminal -- bash -c "
+                source ~/.bashrc;
+                export NVM_DIR=\\"$HOME/.nvm\\";
+                [ -s \\"$NVM_DIR/nvm.sh\\" ] && \\. \\"$NVM_DIR/nvm.sh\\";
+                cd '${fullPath}';
+                echo 'Running command: ${projectInfo.runCommand}';
+                ${projectInfo.runCommand};
+                echo 'Command finished. Terminal will remain open.';
+                exec bash;
+                "
+            `;
         }
-        res.json({ message: 'Project started in a new terminal window' });
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return res.status(500).json({ 
+                    error: 'An error occurred while running the project',
+                    details: error.message,
+                    stdout: stdout,
+                    stderr: stderr
+                });
+            }
+            res.json({ message: 'Project started in a terminal' });
+        });
     });
 });
 
